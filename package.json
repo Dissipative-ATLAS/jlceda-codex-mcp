@@ -1,0 +1,28 @@
+{
+  "name": "jlceda-codex-mcp",
+  "version": "0.4.5",
+  "description": "JLCEDA Pro extension and local MCP bridge for DRC, netlist, and BOM JSON exports.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "npm --prefix mcp run check",
+    "smoke": "npm --prefix mcp run smoke",
+    "package:eext": "node ./tools/package-eext.mjs ./extension-live044 ./codex-jlceda-export-bridge-0.4.4-jszip.eext",
+    "package:extension": "node ./tools/package-eext.mjs ./extension-live044 ./codex-jlceda-export-bridge-0.4.4-jszip.eext",
+    "package:live044": "node ./tools/package-eext.mjs ./extension-live044 ./codex-jlceda-export-bridge-0.4.4-jszip.eext"
+  },
+  "keywords": [
+    "jlceda",
+    "jlcpcb",
+    "mcp",
+    "codex",
+    "eda",
+    "drc",
+    "bom",
+    "netlist"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "jszip": "^3.10.1"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "jlceda-codex": {
+      "command": "node",
+      "args": [
+        "<repo>\\mcp\\server.js"
+      ],
+      "env": {
+        "JLCEDA_EXPORT_DIR": "<repo>\\exports",
+        "JLCEDA_MCP_HTTP_PORT": "38425",
+        "JLCEDA_MCP_WS_PORT": "38426"
+      }
+    }
+  }
+}

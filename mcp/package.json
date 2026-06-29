@@ -1,0 +1,24 @@
+{
+  "name": "jlceda-codex-mcp",
+  "version": "0.4.5",
+  "description": "Local MCP and HTTP bridge for JLCPCB/Lichuang EDA Pro DRC, netlist, and BOM JSON exports.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "jlceda-codex-mcp": "./server.js"
+  },
+  "scripts": {
+    "start": "node ./server.js",
+    "http": "node ./server.js --http-only",
+    "smoke": "node ./server.js --smoke",
+    "check": "node ./server.js --check"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.3",
+    "ws": "^8.21.0",
+    "zod": "^3.25.64"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

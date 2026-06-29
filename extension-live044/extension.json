@@ -1,0 +1,116 @@
+{
+  "name": "codex-jlceda-export-bridge-044",
+  "uuid": "44codexexport0000000000000000001",
+  "displayName": "Codex JLCEDA Export Bridge 044",
+  "description": "Verified JLCEDA Pro export bridge for DRC, netlist, and BOM JSON with local MCP beacon diagnostics.",
+  "version": "0.4.4",
+  "publisher": "Codex",
+  "engines": {
+    "eda": "^3.0.0"
+  },
+  "license": "MIT",
+  "categories": "Other",
+  "keywords": [
+    "DRC",
+    "BOM",
+    "Netlist",
+    "MCP",
+    "Codex"
+  ],
+  "activationEvents": {
+    "onStartupFinished": true
+  },
+  "entry": "./dist/index",
+  "dependentExtensions": {},
+  "headerMenus": {
+    "home": [
+      {
+        "id": "CodexExport044Home",
+        "title": "CodexExport044",
+        "menuItems": [
+          {
+            "id": "CodexExport044StartHome",
+            "title": "Start Live Bridge",
+            "registerFn": "startLiveBridge"
+          },
+          {
+            "id": "CodexExport044DiagnoseHome",
+            "title": "Diagnose Local MCP...",
+            "registerFn": "diagnoseLocalMcp"
+          },
+          {
+            "id": "CodexExport044AboutHome",
+            "title": "About Export Bridge...",
+            "registerFn": "about"
+          }
+        ]
+      }
+    ],
+    "sch": [
+      {
+        "id": "CodexExport044Sch",
+        "title": "CodexExport044",
+        "menuItems": [
+          {
+            "id": "CodexExport044StartSch",
+            "title": "Start Live Bridge",
+            "registerFn": "startLiveBridge"
+          },
+          {
+            "id": "CodexExport044SchJson",
+            "title": "Export SCH DRC/Netlist/BOM JSON...",
+            "registerFn": "exportSchJson"
+          },
+          {
+            "id": "CodexExport044AllFromSch",
+            "title": "Export All JSON To Local MCP...",
+            "registerFn": "exportAllJson"
+          },
+          {
+            "id": "CodexExport044DiagnoseSch",
+            "title": "Diagnose Local MCP...",
+            "registerFn": "diagnoseLocalMcp"
+          },
+          {
+            "id": "CodexExport044AboutSch",
+            "title": "About Export Bridge...",
+            "registerFn": "about"
+          }
+        ]
+      }
+    ],
+    "pcb": [
+      {
+        "id": "CodexExport044Pcb",
+        "title": "CodexExport044",
+        "menuItems": [
+          {
+            "id": "CodexExport044StartPcb",
+            "title": "Start Live Bridge",
+            "registerFn": "startLiveBridge"
+          },
+          {
+            "id": "CodexExport044PcbJson",
+            "title": "Export PCB DRC/Netlist JSON...",
+            "registerFn": "exportPcbJson"
+          },
+          {
+            "id": "CodexExport044AllFromPcb",
+            "title": "Export All JSON To Local MCP...",
+            "registerFn": "exportAllJson"
+          },
+          {
+            "id": "CodexExport044DiagnosePcb",
+            "title": "Diagnose Local MCP...",
+            "registerFn": "diagnoseLocalMcp"
+          },
+          {
+            "id": "CodexExport044AboutPcb",
+            "title": "About Export Bridge...",
+            "registerFn": "about"
+          }
+        ]
+      }
+    ]
+  }
+}

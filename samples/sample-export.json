@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "jlceda-codex-export/v0.1",
+  "exportedAt": "2026-06-18T00:00:00.000Z",
+  "scope": "sch",
+  "drc": {
+    "sch": {
+      "kind": "sch_Drc",
+      "available": true,
+      "passed": false,
+      "verbose": [
+        {
+          "rule": "Unconnected Pin",
+          "message": "U1 pin EN is unconnected",
+          "designator": "U1",
+          "pin": "EN"
+        }
+      ]
+    }
+  },
+  "manufacture": {
+    "sch": {
+      "netlist": {
+        "name": "sample.net",
+        "type": "application/octet-stream",
+        "size": 48,
+        "text": "[\nU1\nModule\nESP32-C3-MINI-1U\n]\n(\nVCC3V3\nU1-1\nC1-1\n)\n"
+      },
+      "bom": {
+        "name": "sample.csv",
+        "type": "text/csv",
+        "size": 76,
+        "text": "Designator,Quantity,Value,Footprint\nU1,1,ESP32-C3-MINI-1U,Module\n"
+      }
+    }
+  }
+}

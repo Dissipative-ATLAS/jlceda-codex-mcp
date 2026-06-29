@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.codex/jlceda-export.schema.json",
+  "title": "Codex JLCEDA Export",
+  "type": "object",
+  "required": ["schemaVersion", "exportedAt", "scope"],
+  "properties": {
+    "schemaVersion": {
+      "const": "jlceda-codex-export/v0.1"
+    },
+    "exportedAt": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["sch", "pcb", "all"]
+    },
+    "extension": {
+      "type": "object",
+      "properties": {
+        "uuid": { "type": "string" },
+        "version": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "drc": {
+      "type": "object",
+      "properties": {
+        "sch": { "$ref": "#/$defs/drcResult" },
+        "pcb": { "$ref": "#/$defs/drcResult" }
+      },
+      "additionalProperties": true
+    },
+    "manufacture": {
+      "type": "object",
+      "properties": {
+        "sch": {
+          "type": "object",
+          "properties": {
+            "netlist": { "$ref": "#/$defs/fileText" },
+            "bom": { "$ref": "#/$defs/fileText" }
+          },
+          "additionalProperties": true
+        },
+        "pcb": {
+          "type": "object",
+          "properties": {
+            "netlist": { "$ref": "#/$defs/fileText" }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "drcResult": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string" },
+        "available": { "type": "boolean" },
+        "passed": {
+          "type": ["boolean", "null"]
+        },
+        "verbose": {},
+        "attempts": {
+          "type": "array"
+        }
+      },
+      "additionalProperties": true
+    },
+    "fileText": {
+      "type": ["object", "null"],
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "type": { "type": ["string", "null"] },
+        "size": { "type": ["number", "null"] },
+        "text": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    }
+  }
+}
