@@ -7,32 +7,35 @@
 这是一个面向嘉立创 EDA 专业版（JLCPCB/Lichuang EDA Pro）的本地桥接项目。它包含一个嘉立创 EDA 扩展和一个本地 MCP/HTTP/WebSocket 服务，让 Codex 或其他 MCP 客户端可以自动导出并解析：
 
 - 原理图/PCB DRC 状态
-- 原理图/PCB 网表（EasyEDA JSON 或 Protel2）
-- BOM（CSV/TSV/XLSX，支持 UTF-16LE/base64）
+- 原理图/PCB 网表，包括 EasyEDA JSON 和 Protel2 风格数据
+- BOM 文件，包括 CSV/TSV/XLSX 和 UTF-16LE/base64 导出
 
-项目的目标不是替代嘉立创 EDA，而是把 GUI 内部的检查和制造数据变成可程序化读取的 JSON，方便后续做自动诊断、网表查询、BOM 检查和闭环修改。
+项目目标不是替代嘉立创 EDA，而是把 GUI 内部的检查和制造数据变成可程序化读取的 JSON，方便后续做自动诊断、网表查询、BOM 检查和闭环原理图修图。
 
 ### 功能
 
 - 嘉立创 EDA 顶部菜单：`CodexExport044`
-- Live WebSocket 桥接：Codex 可主动请求当前打开工程导出 JSON
+- Live WebSocket 桥接：MCP 客户端可主动请求当前打开工程导出 JSON
 - 一次性 HTTP 导出：扩展可把 JSON 推送到本地服务
 - MCP 工具：列出导出、请求导出、读取摘要、查询网络、查询器件、解析 BOM、输出诊断
-- DRC API 调用错误和真实 DRC 条目分离，避免把“当前没有 PCB 画布”误判为设计规则错误
+- DRC API 调用错误和真实 DRC 条目分离，避免把“当前没有 PCB 画布”等运行时状态误判为设计规则错误
 - 保留原始导出数据，同时提供结构化摘要
+- 附带一个可复用的 Codex skill：`jlcpcb-headstage-pcb`
 
-### 目录
+### 目录结构
 
 ```text
-extension-live044/     当前验证过的嘉立创 EDA 扩展源码
-mcp/                   本地 MCP server + HTTP/WebSocket bridge
-scripts/               启动、诊断、打包脚本
-schemas/               JSON schema
-samples/               脱敏示例导出
-tools/                 .eext 打包工具
+extension-live044/        当前验证过的嘉立创 EDA 扩展源码
+mcp/                      本地 MCP server + HTTP/WebSocket bridge
+scripts/                  启动、诊断、打包脚本
+schemas/                  JSON schema
+samples/                  脱敏示例导出
+skills/jlcpcb-headstage-pcb/
+                          可安装到 Codex 的嘉立创脑机/Headstage PCB 设计 skill
+tools/                    .eext 打包工具
 ```
 
-默认端口：
+默认端点：
 
 ```text
 HTTP:      http://127.0.0.1:38425
@@ -69,13 +72,13 @@ Invoke-WebRequest -UseBasicParsing http://127.0.0.1:38425/health
 Invoke-WebRequest -UseBasicParsing http://127.0.0.1:38425/api/jlceda/ws-status
 ```
 
-### 打包嘉立创 EDA 扩展
+### 打包并安装嘉立创 EDA 扩展
 
 ```powershell
 npm run package:extension
 ```
 
-生成 `.eext` 后，在嘉立创 EDA 专业版的扩展管理器中导入。导入并重启嘉立创 EDA 后，打开工程，在顶部菜单点击：
+生成 `.eext` 后，在嘉立创 EDA 专业版扩展管理器中导入。导入并重启嘉立创 EDA 后，打开工程，在顶部菜单点击：
 
 ```text
 CodexExport044 -> Start Live Bridge
@@ -85,7 +88,7 @@ CodexExport044 -> Start Live Bridge
 
 ### MCP 配置示例
 
-在支持 MCP 的客户端中配置本地 server。把 `<repo>` 替换为本仓库路径：
+把 `<repo>` 替换为本仓库路径：
 
 ```json
 {
@@ -133,6 +136,24 @@ JLCEDA_MCP_WS_PORT = "38426"
 - `jlceda_bom_rows`：解析 BOM 行
 - `jlceda_export_dir`：显示导出目录和端口
 
+### 附带 Codex Skill
+
+仓库包含一个可复用 skill：
+
+```text
+skills/jlcpcb-headstage-pcb
+```
+
+它总结了 RHS2116/RHD2164 脑机 headstage、80 通道圆形板、ESP32/iCE40 控制板、电源树、嘉立创 EDA `.eprj2` 解析、Gerber/CAM 输出检查、BOM/LCSC 元数据和本项目实测出的 JLCEDA Live MCP 闭环修图经验。
+
+安装到 Codex：
+
+```powershell
+Copy-Item -Recurse -Force .\skills\jlcpcb-headstage-pcb "$env:USERPROFILE\.codex\skills\jlcpcb-headstage-pcb"
+```
+
+安装后可在 Codex 中用 `$jlcpcb-headstage-pcb` 调用。该 skill 适合复盘嘉立创工程、检查脑机 headstage PCB、解析 `.eprj2`/Gerber/CAM、以及通过本 MCP 做 DRC/网表/BOM 闭环修图。
+
 ### 验证
 
 ```powershell
@@ -152,9 +173,9 @@ npm --prefix mcp run smoke
 ### 隐私与限制
 
 - `exports/`、`logs/`、`node_modules/` 默认不会进入 git。
-- 导出的 JSON 可能包含完整网表、BOM、工程路径或器件信息，公开仓库前请不要提交真实项目导出。
+- 导出的 JSON 可能包含完整网表、BOM、工程路径或器件信息；公开仓库前不要提交真实项目导出。
 - 嘉立创 EDA 的 `SCH_Drc.check` 和 `PCB_Drc.check` 属于 API 中的 BETA 能力，返回结构可能随版本变化。
-- 本项目当前实现的是“导出与诊断闭环”的数据通路；自动修改嘉立创工程文件需要额外的编辑策略和复核流程。
+- 本项目当前实现的是“导出与诊断闭环”的数据通路；自动修改嘉立创工程仍需要配合运行时编辑脚本和人工复核流程。
 
 ### License
 
@@ -178,16 +199,19 @@ The goal is not to replace JLCEDA Pro. The goal is to turn GUI-only design check
 - MCP tools for export listing, live export requests, summaries, net lookup, component lookup, BOM parsing, and diagnostics
 - DRC API attempt errors are separated from real rule items, so a missing PCB canvas is not reported as a design-rule violation
 - Raw export payloads are preserved while structured summaries are generated
+- Bundled reusable Codex skill: `jlcpcb-headstage-pcb`
 
 ### Repository Layout
 
 ```text
-extension-live044/     Verified JLCEDA Pro extension source
-mcp/                   Local MCP server plus HTTP/WebSocket bridge
-scripts/               Startup, diagnostics, and packaging scripts
-schemas/               JSON schema
-samples/               Sanitized sample export
-tools/                 .eext packaging helper
+extension-live044/        Verified JLCEDA Pro extension source
+mcp/                      Local MCP server plus HTTP/WebSocket bridge
+scripts/                  Startup, diagnostics, and packaging scripts
+schemas/                  JSON schema
+samples/                  Sanitized sample export
+skills/jlcpcb-headstage-pcb/
+                          Installable Codex skill for JLCEDA headstage PCB work
+tools/                    .eext packaging helper
 ```
 
 Default endpoints:
@@ -291,6 +315,24 @@ JLCEDA_MCP_WS_PORT = "38426"
 - `jlceda_bom_rows`: return parsed BOM rows
 - `jlceda_export_dir`: show the active export directory and bridge ports
 
+### Bundled Codex Skill
+
+This repository includes a reusable Codex skill:
+
+```text
+skills/jlcpcb-headstage-pcb
+```
+
+It captures practical review knowledge for RHS2116/RHD2164 headstage boards, 80-channel circular boards, ESP32/iCE40 control boards, power trees, JLCEDA `.eprj2` parsing, Gerber/CAM inspection, BOM/LCSC metadata checks, and the working JLCEDA Live MCP closed-loop schematic repair flow discovered in this project.
+
+Install it into Codex:
+
+```powershell
+Copy-Item -Recurse -Force .\skills\jlcpcb-headstage-pcb "$env:USERPROFILE\.codex\skills\jlcpcb-headstage-pcb"
+```
+
+After installation, call it in Codex with `$jlcpcb-headstage-pcb`.
+
 ### Validation
 
 ```powershell
@@ -312,7 +354,7 @@ Real closed-loop test:
 - `exports/`, `logs/`, and `node_modules/` are ignored by git.
 - Exported JSON can contain full netlists, BOMs, project paths, and component data. Do not commit real project exports to a public repository.
 - JLCEDA `SCH_Drc.check` and `PCB_Drc.check` are BETA APIs and their return shape may change.
-- This project provides the export and diagnostics data path. Automatic project-file edits require a separate editing strategy and manual review loop.
+- This project provides the export and diagnostics data path. Automatic project-file edits require runtime edit scripts and manual review.
 
 ### License
 

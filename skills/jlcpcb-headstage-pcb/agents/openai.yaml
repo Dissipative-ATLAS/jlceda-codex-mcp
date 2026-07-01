@@ -1,0 +1,4 @@
+interface:
+  display_name: "JLCPCB Headstage PCB"
+  short_description: "Review Lichuang EDA headstage projects and Gerber/CAM exports."
+  default_prompt: "Use $jlcpcb-headstage-pcb to review a Lichuang EDA RHS2116 headstage PCB or Gerber export."
